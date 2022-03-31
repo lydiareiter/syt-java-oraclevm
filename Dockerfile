@@ -1,13 +1,18 @@
-FROM openjdk:17.0.2
+FROM openjdk:11 as BUILDER
 
 WORKDIR /app
 COPY ./src .
 
-RUN ls -lah
-RUN javac ./Main.java && echo "java compiled"
+RUN javac ./Main.java
+
+FROM openjdk:11-jre
+
+COPY --from=BUILDER /app /app
+
+WORKDIR /app
+
+EXPOSE 9999
 
 CMD cd ./src
-CMD ls -lahR
-CMD pwd
 CMD java Main
 
